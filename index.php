@@ -3,7 +3,7 @@ $id = $_POST['id'];
 $cita = $_POST['cita'];
 $autor = $_POST['autor'];
 $fuente = $_POST['fuente'];
-mysql_connect('localhost', 'root', 'root') or die("No se pudo conectar, damn!");
+mysql_connect('localhost', 'yamilgplayground', 'Ezequiel18') or die("No se pudo conectar, damn!");
 mysql_select_db('citas') or die("No se pudo seleccionar la db.");
 
 // Con este query se escriben los datos.
@@ -33,7 +33,6 @@ mysql_close();
   <meta name="description" content="Mi repositorio personal de citas.">
   <meta name="author" content="Yamil Gonzales">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!--<link rel="stylesheet" href="css/style.css">-->
   <style type="text/css"> 
   {
     margin:0;
