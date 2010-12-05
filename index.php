@@ -1,3 +1,31 @@
+<?
+$id = $_POST['id'];
+$cita = $_POST['cita'];
+$autor = $_POST['autor'];
+$fuente = $_POST['fuente'];
+mysql_connect('localhost', 'root', 'root') or die("No se pudo conectar, damn!");
+mysql_select_db('citas') or die("No se pudo seleccionar la db.");
+
+// Con este query se escriben los datos.
+$sqlquery = "INSERT INTO citas VALUES('$cita','$autor','$fuente','$id')";
+
+// El if es para evitar que se los datos se manden vacios cuando se carge la pagina
+if (!empty($_POST['cita'])) {
+   mysql_query($sqlquery);
+   echo "Los valores fueron introducidos.";
+}
+
+// la db ya esta seleccionado ahora se selecciona todo de la tabla
+$sqlquery2 = "SELECT * FROM citas";
+// el query no se ejecuta por defecto sino que se almacena en una variable
+$resultados = mysql_query($sqlquery2) or die(mysql_error());
+// $num sirve para saber cual es el limite de filas en la tabla
+$num = mysql_num_rows($resultados);
+
+mysql_close();
+
+?>
+
 <!DOCTYPE html>
 <html lang="es-419">
 <head>
@@ -19,8 +47,8 @@
   
   body {
     margin:0 auto;
-    width:960px;
-    font:13px/22px "Helvetica neue", Helvetica, Arial, sans-serif;
+    width:640px;
+    font:13px/22px Cambria, Helvetica, Arial, sans-serif;
     color:#333;
   }
   
@@ -33,6 +61,39 @@
     border-radius: 5px;
     margin:5px;
   }
+  
+  blockquote {
+    font-style:italic;
+    font-family:Cambria, serif;
+    font-size:1.5em;
+    text-align:center;
+  }
+  
+  #view-citas dl dd {
+    text-align:right;
+  }
+  
+  hr {
+    color: #f00;
+    background-color: #999;
+    background: -webkit-gradient(
+        linear,
+        left top,
+        right top,
+        color-stop(0.26, rgb(255,255,255)),
+        color-stop(0.5, rgb(128,128,128)),
+        color-stop(0.82, rgb(252,255,255))
+    );
+    background: -moz-linear-gradient(
+        left center,
+        rgb(255,255,255) 26%,
+        rgb(128,128,128) 50%,
+        rgb(252,255,255) 82%
+    );
+    height: 1px;
+    border:0;
+  }
+  
   </style>
 </head>
 
@@ -43,7 +104,7 @@
   </header>
   
   <section id="add-form">
-  <form id="add-cita" method="post" action="agregar.php">
+  <form id="add-cita" method="post" action="<? echo $PHP_SELF;?>">
   <input type="hidden" name="id" value="NULL">
     <fieldset>
       <legend>Agregar nueva cita.</legend>
@@ -62,9 +123,21 @@
   
   <section id="view-citas">
     <header>
-      <h2>Citas que he agregado:</h2>
+      <h2>Colección:</h2>
     </header>
+    <?  $i=0; while ($i < $num) {
+      $mostrar_cita = mysql_result($resultados, $i, 'citas');
+      $mostrar_autor = mysql_result($resultados, $i, 'autor');
+      $mostrar_fuente = mysql_result($resultados, $i, 'fuente');
+      echo "<dl>
+              <dt><blockquote>&ldquo; $mostrar_cita &rdquo;</blockquote><dt> 
+              <dd><p>$mostrar_autor </p></dd>
+              <dd><p>$mostrar_fuente </p></dd>
+            <dl> <hr>";
+    $i++;
+    }
    
+ ?>
   </section>
   
 </body>
