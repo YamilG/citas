@@ -3,8 +3,8 @@ $id = $_POST['id'];
 $cita = $_POST['cita'];
 $autor = $_POST['autor'];
 $fuente = $_POST['fuente'];
-mysql_connect('localhost', 'root', 'root') or die("No se pudo conectar, damn!");
-mysql_select_db('citas') or die("No se pudo seleccionar la db.");
+mysql_connect('server', 'user', 'pass') or die("No se pudo conectar, damn!");
+mysql_select_db('dbname') or die("No se pudo seleccionar la db.");
 
 // Con este query se escriben los datos.
 $sqlquery = "INSERT INTO citas VALUES('$cita','$autor','$fuente','$id')";
@@ -33,6 +33,7 @@ mysql_close();
   <meta name="description" content="Mi repositorio personal de citas.">
   <meta name="author" content="Yamil Gonzales">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link  href="http://fonts.googleapis.com/css?family=League+Script:400" rel="stylesheet" type="text/css" >
   <style type="text/css"> 
   {
     margin:0;
@@ -55,19 +56,18 @@ mysql_close();
   body {
     margin:0 auto;
     width:640px;
-    font:13px/22px Cambria, Helvetica, Arial, sans-serif;
-    color:#333;
+    font:13px Georgia, serif;
+    color:#4A4A4B;
   }
   
   h1 {
-    font-size:2.5em;
+    font-family: 'League Script', serif;
+      font-size: 60px;
+      font-style: normal;
+      margin-bottom:20px;
+      text-align:center;
   }
-  
-  h1 {
-    text-align:center;
-   
-  }
-  
+    
   #cita {
     display:block;
     width:98%;
@@ -76,31 +76,43 @@ mysql_close();
     padding:5px;
     border-radius: 5px;
     margin:5px;
-    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, arial, sans-serif; 
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif; 
     font-weight: 300;
     font-size:1.4em;
     border: 1px solid #E4E4E4;
   }
   
+  form input {
+    width:175px;
+  }
+  
   form textarea {
     margin:10px 0 12px 0;
     padding:10px;
+    clear:both;
   }
   
   blockquote {
-    font-family:Cambria, serif;
-    font-size:1.5em;
-    text-align:center;
-    color:#333;
-    line-height:1.4em;
+    font-size:1.4em;
+    text-align:left;
+    line-height:1.7em;
     margin-top:-20px;
+    color:#333;
   }
   
   #view-citas dl dd {
-    text-align:center;
+    text-align:right;
     margin-bottom:-20px;
+    font-size:1.1em;
+    line-height:1.6em;
   }
   
+  .quote {
+    font-size: 64px; 
+    font-family: Georgia, serif; 
+    color:#ccc;
+    margin-bottom:-70px;
+  }
  
   form fieldset {
     border:none;
@@ -149,7 +161,16 @@ mysql_close();
       padding: 7px 0 8px 0;
       text-align: center;
       text-shadow: 0px -1px 1px rgba(0, 0, 0, .5);
-      width: 118px;
+      width: 123px;
+      height:32px;
+      cursor:pointer;
+    }
+
+    @-moz-document url-prefix() {
+      #add-cita input[type='submit'] {
+         width: 120px;
+         padding: 3px 0 8px 0;
+      }
     }
 
     #add-cita input[type='submit']:hover {
@@ -192,9 +213,11 @@ mysql_close();
     	}
     }
 
-    #add-cita fieldset input[type="text"]:focus {
+    #add-cita fieldset input[type="text"]:focus, #add-cita textarea:focus {
     	-webkit-animation: pulse 1.5s infinite ease-in-out;
     	}
+  
+
   
   </style>
 </head>
@@ -202,7 +225,7 @@ mysql_close();
 <body>
   
   <header>
-    <h1>&lt;Citas&gt;</h1>
+    <h1>Citas</h1>
   </header>
   
   <section id="add-form">
@@ -210,10 +233,9 @@ mysql_close();
   <input type="hidden" name="id" value="NULL">
     <fieldset>
       <legend>Agregar cita:</legend>
-        <textarea id="cita" name="cita" required autofocus placeholder="Aqu&iacute; es donde se ingresan las citas"></textarea>
-    <!-- agregar el autofocus luego -->
+        <textarea id="cita" name="cita" autofocus placeholder="Aqu&iacute; es donde se ingresan las citas"></textarea>
     <label for="autor">Autor:</label>
-    <input type="text" id="autor" name="autor" required placeholder="¿Qui&eacute;n lo escribi&oacute;?">
+    <input type="text" id="autor" name="autor" placeholder="¿Qui&eacute;n lo escribi&oacute;?">
     <label for="fuente">Fuente:</label>
     <input type="text" id="fuente" name="fuente" placeholder="¿De d&oacute;nde lo saqu&eacute;?">
     <input type="submit" value="Agregar">
@@ -228,10 +250,12 @@ mysql_close();
       $mostrar_cita = mysql_result($resultados, $i, 'citas');
       $mostrar_autor = mysql_result($resultados, $i, 'autor');
       $mostrar_fuente = mysql_result($resultados, $i, 'fuente');
-      echo "<dl>
-              <dt><blockquote>&ldquo; $mostrar_cita &rdquo;</blockquote><dt> 
-              <dd><p>$mostrar_autor </p></dd>
-              <dd><p>$mostrar_fuente </p></dd>
+      echo "
+            <div class='quote'> &#8220; </div>
+            <dl>
+              <dt><blockquote>$mostrar_cita</blockquote><dt> 
+              <dd><p>&#8212; $mostrar_autor</p></dd>
+              <dd><p><em>$mostrar_fuente</em></p></dd>
             <dl> <hr>";
     $i--;
     }
